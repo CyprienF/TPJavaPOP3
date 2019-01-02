@@ -6,9 +6,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MainServeur {
-    private static final int PORTECOUTE=110;
+
+    private static final int PORTECOUTE = 110;
     private ServerSocket socketEcouteSeveur;
     private boolean isRunning = true;
+
     public MainServeur() throws IOException {
         this.socketEcouteSeveur = new ServerSocket(PORTECOUTE,6);
     }
@@ -30,13 +32,11 @@ public class MainServeur {
                 }
             }
         });
+
         t.start();
-
     }
 
-
-    public void closeConnection(){
-        isRunning= false;
+    public void closeConnection() {
+        isRunning = false;
     }
-
 }

@@ -1,17 +1,12 @@
 package Server;
 
-
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.time.OffsetDateTime;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class ChildServeur implements Runnable {
     private Socket sock;
@@ -19,6 +14,7 @@ public class ChildServeur implements Runnable {
     private BufferedReader reader = null;
     private boolean continueState = false;
     private int APOPERRORCHECK=0;
+
     public ChildServeur(Socket sock) {
         this.sock = sock;
     }
@@ -66,7 +62,7 @@ public class ChildServeur implements Runnable {
                     sock.close();
                     break;
                 }
-            }catch(SocketException e){
+            } catch(SocketException e){
                 System.err.println("LA CONNEXION A ETE INTERROMPUE ! ");
                 break;
             } catch (IOException e) {
@@ -82,20 +78,21 @@ public class ChildServeur implements Runnable {
     }
 
     private boolean authorizationState() throws IOException {
-        do{
+        do {
             String reponse = read();
             if(checkAPOPComand(reponse)){
                 sendMessage(commandAPOP(reponse));
-                this.continueState=true;
+                this.continueState = true;
             }
-        }while (!this.continueState);
-        this.continueState =false;
+        } while (!this.continueState);
+
+        this.continueState = false;
         return true;
     }
     private Boolean transactionState() throws IOException {
 
         do{
-            String reponse=read();
+            String reponse = read();
             switch(checkTransactionCommand(reponse)){
                 case 0:
                     sendMessage(commandSTAT(reponse));
@@ -110,35 +107,37 @@ public class ChildServeur implements Runnable {
                 default:
                     System.out.println("IGNORED");
             }
-        }while (!continueState);
-        this.continueState = false ;
+        } while (!continueState);
+
+        this.continueState = false;
         return true;
     }
 
     private boolean checkAPOPComand(String data){
         String[] reponse = data.split(" ");
-        if(reponse.length==2){
+        if(reponse.length == 2) {
             if(reponse[0].equals("APOP")){
                 return checkFolderExists(reponse[1]);
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
 
     }
 
     private boolean checkFolderExists(String folderName){
-        return Files.isDirectory(Paths.get("./src/main/resources/"+folderName));
+        return Files.isDirectory(Paths.get("./src/main/resources/" + folderName));
     }
+
     private int checkTransactionCommand(String reponse){
         return 0;
     }
 
     private String commandAPOP(String command){
         String[] reponse = command.split(" ");
-        File f= new File("./src/main/resources/"+reponse[1]);
+        File f = new File("./src/main/resources/" + reponse[1]);
 
         return "+OK mail drop has "+ f.list().length + " message";
     }
@@ -160,24 +159,23 @@ public class ChildServeur implements Runnable {
     }
 
     private String read() throws IOException {
-        String test=reader.readLine();
+        String test = reader.readLine();
         return test;
-    };
+    }
 
     private String getFile(String reponses){
         try{
-            String toSend="+OK POP3 "+ reponses +"\r\n";
+            String toSend = "+OK POP3 " + reponses + "\r\n";
             //File file = new File("./src/main/resources"+route[1]);
 
-
             return toSend;
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendError();
         }
 
     }
 
-    private String sendError(){
+    private String sendError() {
         return "Error";
     }
 
