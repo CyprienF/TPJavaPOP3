@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 
 public class LunchServer {
+
     public static void main(String[] args) {
         try {
             MainServeur m = new MainServeur();
@@ -10,6 +11,5 @@ public class LunchServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

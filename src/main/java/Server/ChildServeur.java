@@ -13,7 +13,7 @@ public class ChildServeur implements Runnable {
     private OutputStream writer = null;
     private BufferedReader reader = null;
     private boolean continueState = false;
-    private int APOPERRORCHECK=0;
+    private int APOPERRORCHECK = 0;
 
     public ChildServeur(Socket sock) {
         this.sock = sock;
@@ -25,7 +25,7 @@ public class ChildServeur implements Runnable {
         boolean closeConnexion = false;
 
         //while the cpnnection is still active we treat the different demands
-        while(!sock.isClosed()){
+        while(!sock.isClosed()) {
             try {
                 //sock.setSoTimeout(10000);
                 reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
