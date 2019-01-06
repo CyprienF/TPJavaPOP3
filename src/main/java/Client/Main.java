@@ -43,7 +43,7 @@ public class Main extends Application {
         final TextField txtUserName = new TextField();
         Label lblPassword = new Label("Mot de passe");
         final PasswordField pf = new PasswordField();
-        Button btnLogin = new Button("Connexion");
+        final Button btnLogin = new Button("Connexion");
         final Label lblMessage = new Label();
 
         Label lblHostServer = new Label("Adresse serveur");
@@ -107,6 +107,13 @@ public class Main extends Application {
 
                     Button refreshBtn = new Button("Rafraîchir");
 
+                    btnLogin.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+
+                        }
+                    });
+
                     gridPane.add(listViewPanel, 0, 0);
                     gridPane.add(refreshBtn, 0, 1);
 
@@ -143,7 +150,6 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);
