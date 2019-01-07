@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -92,22 +93,28 @@ public class Main extends Application {
                     lblMessage.setText("Congratulations!");
                     lblMessage.setTextFill(Color.GREEN);
 
-                    ListView<String> listView;
+                    final ListView<String> listView;
 
                     Group root = new Group();
 
                     HBox listViewPanel = new HBox();
                     listViewPanel.setSpacing(10);
 
-                    final Text label = new Text("Nothing selected.");
+                    final Text label = new Text("Sélectionnez un email");
 
-                    listView = new ListView<String>(FXCollections.observableArrayList("Item 1", "Item 2", "Item 3", "Item 4"));
+                    final String[] emails = mails;
+                    ArrayList emailsCount = new ArrayList();
+                    for(int i = 1; i <= mails.length; i++) {
+                        emailsCount.add("Email " + i);
+                    }
+
+                    listView = new ListView<String>(FXCollections.observableArrayList(emailsCount));
                     listView.prefWidth(100);
                     listView.setMaxWidth(100);
                     listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 
                         public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                            label.setText("You selected " + newValue);
+                            label.setText(emails[listView.getSelectionModel().getSelectedIndex()]);
                         }
                     });
 
@@ -118,26 +125,17 @@ public class Main extends Application {
                     gridPane.setHgap(5);
                     gridPane.setVgap(5);
 
-                    Button refreshBtn = new Button("Rafraîchir");
                     Button logoutBtn = new Button("Déconnexion");
-
-                    btnLogin.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-
-                        }
-                    });
 
                     logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-
+                            primaryStage.close();
                         }
                     });
 
                     gridPane.add(listViewPanel, 0, 0);
-                    gridPane.add(refreshBtn, 0, 1);
-                    gridPane.add(logoutBtn, 0, 2);
+                    gridPane.add(logoutBtn, 0, 1);
 
                     root.getChildren().add(gridPane);
 
