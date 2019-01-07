@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class ChildServeur implements Runnable {
     private Socket sock;
-    private OutputStream writer = null;
+    private BufferedOutputStream writer = null;
     private BufferedReader reader = null;
     private boolean continueState = false;
     private int APOPERRORCHECK = 0;
@@ -31,7 +31,7 @@ public class ChildServeur implements Runnable {
             try {
                 //sock.setSoTimeout(10000);
                 reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-                writer  = sock.getOutputStream();
+                writer  = new BufferedOutputStream(sock.getOutputStream());
                 //On attend la demande du client
                 InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
                 //On affiche quelques infos, pour le débuggage
@@ -79,8 +79,9 @@ public class ChildServeur implements Runnable {
 
     private void sendMessage(String data) throws IOException {
         this.writer.write(data.getBytes());
-        writer.flush();
-        //writer.close()
+        System.out.println(data);
+        this.writer.flush();
+        //writer.close();
     }
 
     private boolean authorizationState() throws IOException {

@@ -25,13 +25,13 @@ public class Client {
 
         this.socket = new Socket(host, port);
 
-
         DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
-        InputStream in = this.socket.getInputStream();
+        BufferedReader in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+        String response= readResponse(in);
+        System.out.println(getBody(response));
         String commandAPOP="APOP "+userName;
         sendMessage(out, commandAPOP);
-        String response= readResponse(in);
-
+        response= readResponse(in);
         System.out.println(getBody(response));
         sendMessage(out,commandAPOP);
         response=readResponse(in);
@@ -50,13 +50,12 @@ public class Client {
         out.flush();
     }
 
-    private static String readResponse(InputStream in) throws IOException {
+    private static String readResponse(BufferedReader in) throws IOException {
         System.out.println("* Response");
         String content = "";
         String tmp="";
-        byte[] test =IOUtils.readFully(in,-1,true );
 
-        content= new String(test);
+        content= in.readLine();
         return content;
     }
 
