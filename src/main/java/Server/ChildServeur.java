@@ -7,6 +7,7 @@ import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class ChildServeur implements Runnable {
     private Socket sock;
@@ -94,9 +95,11 @@ public class ChildServeur implements Runnable {
 
         do{
             String reponse = read();
+
+            System.out.println("Command '"+ reponse+ "' received");
             switch(checkTransactionCommand(reponse)){
                 case 0:
-                    sendMessage(commandSTAT(reponse));
+                    sendMessage(commandSTAT());
                     break;
                 case 1:
                     sendMessage(commandRETR(reponse));
@@ -158,7 +161,7 @@ public class ChildServeur implements Runnable {
         return "+OK mail drop has "+ this.userFile.list().length + " message \r\n";
     }
 
-    private String commandSTAT(String command){
+    private String commandSTAT(){
         return "+OK "+ this.userFile.list().length+" "+getFileSize()+" \r\n";
     }
 
@@ -172,9 +175,44 @@ public class ChildServeur implements Runnable {
 
 
     private String commandRETR(String command){
-        return "RETR";
+        String[] reponse = command.split(" ");
+        String mailToSend= "";
+        if(reponse.length == 1) {
+            for( File f : this.userFile.listFiles()){
+                mailToSend+=readEmail(f);
+            }
+        }else if(reponse.length > 1){
+            try{
+                int mailNumber= Integer.parseInt(reponse[1]);
+                if(this.userFile.list().length>mailNumber && mailNumber>=0){
+                    mailToSend+=readEmail(this.userFile.listFiles()[mailNumber]);
+                }else{
+                    return "-ERR invalid message number \r\n";
+                }
+            }catch (NumberFormatException ex){
+                return "-ERR invalid RETR Command \r\n";
+            }
+        }else{
+            return "-ERR invalid RETR Command \r\n";
+        }
+        return "+OK \n\n"+mailToSend + " \r\n";
     }
+    private String readEmail(File f){
+        String mail="";
+        try {
+            Scanner sc = new Scanner(f);
+            while (sc.hasNextLine())
+                mail+=sc.nextLine()+"\r\n";
 
+            mail+="\n\n";
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return mail;
+
+    }
     private String commandQUIT(String command){
         return "QUIT";
     }
@@ -192,7 +230,6 @@ public class ChildServeur implements Runnable {
         try{
             String toSend = "+OK POP3 " + reponses + "\r\n";
             //File file = new File("./src/main/resources"+route[1]);
-
             return toSend;
         } catch (Exception e) {
             return sendError();
