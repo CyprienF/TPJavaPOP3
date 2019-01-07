@@ -54,10 +54,14 @@ public class Client {
     }
 
     private String readResponse(InputStream in) throws IOException {
+        System.out.println(in.available());
+        int available = in.available();
+        while(available == 0) {
+            available = in.available();
+        }
         byte[] b=new byte[in.available()];
         in.read(b);
         String result=new String(b, "UTF-8");
-        System.out.println(result);
         return result;
     }
 
