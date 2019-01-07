@@ -13,7 +13,7 @@ public class Client {
 
     private Socket socket;
     private OutputStream out=null;
-    private BufferedReader in=null;
+    private InputStream in=null;
     public Client() {
 
     }
@@ -27,7 +27,7 @@ public class Client {
         this.socket = new Socket(host, port);
 
         this.out = this.socket.getOutputStream();
-        this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+        this.in  = this.socket.getInputStream();
         String response= readResponse(in);
         System.out.println(response);
 
@@ -53,13 +53,12 @@ public class Client {
         this.out.flush();
     }
 
-    private String readResponse(BufferedReader in) throws IOException {
-        System.out.println("* Response");
-        String content = "";
-        String tmp="";
-
-        content= in.readLine();
-        return content;
+    private String readResponse(InputStream in) throws IOException {
+        byte[] b=new byte[in.available()];
+        in.read(b);
+        String result=new String(b, "UTF-8");
+        System.out.println(result);
+        return result;
     }
 
     private String getBody(String s){
