@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Client {
 
     private Socket socket;
-    private BufferedOutputStream out=null;
+    private OutputStream out=null;
     private BufferedReader in=null;
     public Client() {
 
@@ -26,15 +26,15 @@ public class Client {
 
         this.socket = new Socket(host, port);
 
-         this.out = new BufferedOutputStream(this.socket.getOutputStream());
-         this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+        this.out = this.socket.getOutputStream();
+        this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
         String response= readResponse(in);
-        System.out.println(getBody(response));
-        String commandAPOP="APOP "+userName;
+        System.out.println(response);
+        String commandAPOP="APOP "+userName+ "\r\n";
         sendMessage( commandAPOP);
         response= readResponse(in);
-        System.out.println(getBody(response));
-        sendMessage(commandAPOP);
+        System.out.println(response);
+        sendMessage("RETR \r\n");
         response=readResponse(in);
         System.out.println(response);
         this.out.close();
