@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main extends Application {
 
@@ -78,12 +79,16 @@ public class Main extends Application {
                 checkHostServer = txtHostServer.getText();
                 checkHostPort = txtHostPort.getText();
 
+                String serverResult="";
                 try {
-                    System.out.println(myClient.runClient(checkHostServer,Integer.parseInt(checkHostPort), checkUser));
+                    serverResult= myClient.runClient(checkHostServer,Integer.parseInt(checkHostPort), checkUser);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(checkUser.equals(user) && checkPw.equals(pw)) {
+                String[] mails = serverResult.split("\r\n");
+
+                if(mails[0].equals("+OK")) {
+                    mails= Arrays.copyOfRange(mails,1,mails.length);
                     lblMessage.setText("Congratulations!");
                     lblMessage.setTextFill(Color.GREEN);
 

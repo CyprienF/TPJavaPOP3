@@ -207,16 +207,16 @@ public class ChildServeur implements Runnable {
         }else{
             return "-ERR invalid RETR Command \r\n";
         }
-        return "+OK \n\n"+mailToSend + " \r\n";
+        return "+OK\r\n"+mailToSend + "\r\n";
     }
     private String readEmail(File f){
         String mail="";
         try {
             Scanner sc = new Scanner(f);
             while (sc.hasNextLine())
-                mail+=sc.nextLine()+"\r\n";
+                mail+=sc.nextLine()+"\n";
 
-            mail+="\n\n";
+            mail+="\r\n";
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
