@@ -79,7 +79,6 @@ public class ChildServeur implements Runnable {
 
     private void sendMessage(String data) throws IOException {
         this.writer.write(data.getBytes());
-        System.out.println(data);
         this.writer.flush();
         //writer.close();
     }
