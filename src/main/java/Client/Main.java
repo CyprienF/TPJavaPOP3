@@ -106,6 +106,7 @@ public class Main extends Application {
                     gridPane.setVgap(5);
 
                     Button refreshBtn = new Button("Rafraîchir");
+                    Button logoutBtn = new Button("Déconnexion");
 
                     btnLogin.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -114,8 +115,16 @@ public class Main extends Application {
                         }
                     });
 
+                    logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+
+                        }
+                    });
+
                     gridPane.add(listViewPanel, 0, 0);
                     gridPane.add(refreshBtn, 0, 1);
+                    gridPane.add(logoutBtn, 0, 2);
 
                     root.getChildren().add(gridPane);
 
