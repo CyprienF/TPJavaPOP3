@@ -34,6 +34,12 @@ public class Client {
         String commandAPOP="APOP "+userName+ "\r\n";
         sendMessage( commandAPOP);
         response= readResponse(in);
+        if(((response.split(" "))[0]).equals("-ERR")){
+            this.out.close();
+            this.in.close();
+            this.closeSocket();
+            return "-ERR";
+        }
         System.out.println(response);
         sendMessage("RETR \r\n");
 
