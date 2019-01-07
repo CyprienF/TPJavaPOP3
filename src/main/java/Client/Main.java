@@ -18,12 +18,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
     private String user = "admin";
     private String pw = "admin";
     private String checkUser, checkPw, checkHostServer, checkHostPort;
-
+    private Client myClient = new Client();
     @Override
     public void start(final Stage primaryStage) {
         primaryStage.setTitle("Client POP3");
@@ -75,6 +77,12 @@ public class Main extends Application {
                 checkPw = pf.getText();
                 checkHostServer = txtHostServer.getText();
                 checkHostPort = txtHostPort.getText();
+
+                try {
+                    System.out.println(myClient.runClient(checkHostServer,Integer.parseInt(checkHostPort), checkUser));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if(checkUser.equals(user) && checkPw.equals(pw)) {
                     lblMessage.setText("Congratulations!");
                     lblMessage.setTextFill(Color.GREEN);
