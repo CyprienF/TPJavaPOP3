@@ -29,11 +29,11 @@ public class Client {
          this.out = new BufferedOutputStream(this.socket.getOutputStream());
          this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
         String response= readResponse(in);
-        System.out.println(getBody(response));
+        System.out.println(response);
         String commandAPOP="APOP "+userName;
         sendMessage( commandAPOP);
         response= readResponse(in);
-        System.out.println(getBody(response));
+        System.out.println(response);
         sendMessage(commandAPOP);
         response=readResponse(in);
         System.out.println(response);
