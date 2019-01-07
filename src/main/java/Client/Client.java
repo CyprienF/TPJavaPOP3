@@ -30,11 +30,13 @@ public class Client {
         this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
         String response= readResponse(in);
         System.out.println(response);
+
         String commandAPOP="APOP "+userName+ "\r\n";
         sendMessage( commandAPOP);
         response= readResponse(in);
         System.out.println(response);
         sendMessage("RETR \r\n");
+
         response=readResponse(in);
         System.out.println(response);
         this.out.close();
