@@ -47,10 +47,14 @@ public class ChildServeur implements Runnable {
 
                 //ETAT AUTHORIZATION
 
-                authorizationState();
+                if(authorizationState()){
+                    closeConnexion = transactionState();
+                }else{
+                    closeConnexion=true;
+                };
 
                 //ETAT TRANSACTION
-                closeConnexion = transactionState();
+
 
                 //Il FAUT IMPERATIVEMENT UTILISER flush()
                 //Sinon les données ne seront pas transmises au client
@@ -80,11 +84,18 @@ public class ChildServeur implements Runnable {
     }
 
     private boolean authorizationState() throws IOException {
+        int errorCount=0;
         do {
             String reponse = read();
             if(checkAPOPComand(reponse)){
                 sendMessage(commandAPOP(reponse));
                 this.continueState = true;
+            }else{
+                sendMessage("-ERR PERMISSION DENIED \r\n");
+                errorCount++;
+            }
+            if(errorCount>2){
+                return false;
             }
         } while (!this.continueState);
 
