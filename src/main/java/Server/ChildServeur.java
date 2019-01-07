@@ -14,7 +14,8 @@ public class ChildServeur implements Runnable {
     private BufferedReader reader = null;
     private boolean continueState = false;
     private int APOPERRORCHECK = 0;
-
+    private File userFile;
+    private String userName;
     public ChildServeur(Socket sock) {
         this.sock = sock;
     }
@@ -132,19 +133,43 @@ public class ChildServeur implements Runnable {
     }
 
     private int checkTransactionCommand(String reponse){
-        return 0;
+        String[] data = reponse.split(" ");
+        if(data.length > 0) {
+            if(data[0].equals("STAT")){
+                return 0;
+            } else if(data[0].equals("RETR")) {
+                return 1;
+            } else if(data[0].equals("QUIT")) {
+                return 2;
+            }else{
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+
     }
 
     private String commandAPOP(String command){
         String[] reponse = command.split(" ");
-        File f = new File("./src/main/resources/" + reponse[1]);
+        this.userName =  reponse[1];
+        this.userFile = new File("./src/main/resources/" + reponse[1]);
 
-        return "+OK mail drop has "+ f.list().length + " message";
+        return "+OK mail drop has "+ this.userFile.list().length + " message \r\n";
     }
 
     private String commandSTAT(String command){
-        return "STAT \r\n";
+        return "+OK "+ this.userFile.list().length+" "+getFileSize()+" \r\n";
     }
+
+    private long getFileSize(){
+        long folderSize = 0;
+        for(File f : this.userFile.listFiles()){
+            folderSize += f.length();
+        }
+        return folderSize;
+    }
+
 
     private String commandRETR(String command){
         return "RETR";
