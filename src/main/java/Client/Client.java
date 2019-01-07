@@ -12,7 +12,8 @@ import java.util.Scanner;
 public class Client {
 
     private Socket socket;
-
+    private BufferedOutputStream out=null;
+    private BufferedReader in=null;
     public Client() {
 
     }
@@ -25,32 +26,32 @@ public class Client {
 
         this.socket = new Socket(host, port);
 
-        DataOutputStream out = new DataOutputStream(this.socket.getOutputStream());
-        BufferedReader in = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
+         this.out = new BufferedOutputStream(this.socket.getOutputStream());
+         this.in  = new BufferedReader( new InputStreamReader(this.socket.getInputStream()));
         String response= readResponse(in);
         System.out.println(getBody(response));
         String commandAPOP="APOP "+userName;
-        sendMessage(out, commandAPOP);
+        sendMessage( commandAPOP);
         response= readResponse(in);
         System.out.println(getBody(response));
-        sendMessage(out,commandAPOP);
+        sendMessage(commandAPOP);
         response=readResponse(in);
         System.out.println(response);
-        out.close();
-        in.close();
+        this.out.close();
+        this.in.close();
         this.closeSocket();
         return  response;
     }
 
-    private static void sendMessage(DataOutputStream out, String request) throws IOException {
+    private void sendMessage(String request) throws IOException {
         System.out.println("* Request");
         System.out.println(request);
 
-        out.write(request.getBytes());
-        out.flush();
+        this.out.write(request.getBytes());
+        this.out.flush();
     }
 
-    private static String readResponse(BufferedReader in) throws IOException {
+    private String readResponse(BufferedReader in) throws IOException {
         System.out.println("* Response");
         String content = "";
         String tmp="";
