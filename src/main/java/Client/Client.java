@@ -45,6 +45,7 @@ public class Client {
 
         response=readResponse(in);
         System.out.println(response);
+        sendMessage("QUIT \r\n");
         this.out.close();
         this.in.close();
         this.closeSocket();
